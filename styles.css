@@ -1,0 +1,47 @@
+:root {
+  --blue: #007BFF;
+  --white: #FFFFFF;
+  --gray: #E5E5E5;
+  --dark-gray: #A4AEB3;
+}
+
+html, body {
+  background-color: var(--gray);
+}
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-last-item {
+  display: none;
+}
+.pagination-wrapper__pagination-item {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  background-color: var(--white);
+  border-radius: 15px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.prev-icon {
+  transform: rotate(180deg);
+}
+
+.disabled-icon {
+  cursor: not-allowed;
+  background-color: var(--dark-gray);
+}
+.pagination-wrapper__pagination-item {
+  margin-right: 4px;
+}
+
+.pagination-item-active {
+  background-color: var(--blue);
+  color: white;
+}

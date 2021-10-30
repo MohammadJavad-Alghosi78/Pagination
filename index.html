@@ -1,0 +1,181 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Pagination</title>
+  </head>
+  <body>
+    <div class="pagination-wrapper">
+      <span
+        class="pagination-wrapper__pagination-item disabled-icon"
+        data-target="0"
+        onclick="changePage(this)"
+      >
+        <img
+          class="prev-icon"
+          src="./images/icon-Thin-Next-blue.svg"
+          alt="previous-icon"
+        />
+      </span>
+      <span
+        class="pagination-wrapper__pagination-item pagination-item-active"
+        data-target="1"
+        onclick="changePage(this)"
+        >1</span
+      >
+      <span
+        class="pagination-wrapper__pagination-item"
+        data-target="2"
+        onclick="changePage(this)"
+        >2</span
+      >
+      <span
+        class="pagination-wrapper__pagination-item"
+        data-target="3"
+        onclick="changePage(this)"
+        >3</span
+      >
+      <span
+        class="pagination-wrapper__pagination-item"
+        data-target="4"
+        onclick="changePage(this)"
+        >4</span
+      >
+      <span
+        class="pagination-wrapper__pagination-item"
+        data-target="-1"
+        onclick="changePage(this)"
+      >
+        <img
+          class="next-icon"
+          src="./images/icon-Thin-Next-blue.svg"
+          alt="next-icon"
+        />
+      </span>
+    </div>
+
+    <script>
+      // HTML elements of pagination-items
+      var pageNumbersElement = document.querySelectorAll(
+        ".pagination-wrapper__pagination-item"
+      );
+      var previousIconContainer = pageNumbersElement[0];
+      var previousIconElement = document.querySelector(".prev-icon");
+      var nextIconContainer = pageNumbersElement[pageNumbersElement.length - 1];
+      var nextIconElement = document.querySelector(".next-icon");
+
+      var allData = 101;
+      var allPages = Math.ceil(allData / 10);
+      var numberOfPages = Array(allPages)
+        .fill()
+        .map((x, i) => i + 1);
+      ;
+
+      // Handle change page with click on pagination items and icons
+      function changePage(element) {
+        var selectedPage = Number(element.getAttribute("data-target"));
+        switch (selectedPage) {
+          // Previous icon
+          case 0:
+            var currentPage = document.querySelector(".pagination-item-active");
+            var pageNumber = Number(currentPage.getAttribute("data-target"));
+
+            // TODO SINA: CHANGE THE SRC OF ICON AND CHANGE IT TO WHTIE ICON
+            nextIconContainer.classList.remove("disabled-icon");
+            nextIconElement.src =
+              "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
+            nextIconElement.style.transform = "rotate(0deg)";
+
+            if (pageNumber === 2) {
+              previousIconContainer.classList.add("disabled-icon");
+              previousIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
+              previousIconElement.style.transform = "rotate(0)";
+            } else if (pageNumber === 1) return;
+
+            pageNumbersElement[pageNumber - 1].classList.add(
+              "pagination-item-active"
+            );
+            currentPage.classList.remove("pagination-item-active");
+            break;
+
+          // Next icon
+          case -1:
+            var currentPage = document.querySelector(".pagination-item-active");
+            var pageNumber = Number(currentPage.getAttribute("data-target"));
+            // TODO SINA: CHANGE THE SRC OF ICON AND CHANGE IT TO WHTIE ICON
+
+            previousIconContainer.classList.remove("disabled-icon");
+            previousIconElement.src =
+              "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
+            previousIconElement.style.transform = "rotate(180deg)";
+
+            if (pageNumber === pageNumbersElement.length - 3) {
+              nextIconContainer.classList.add("disabled-icon");
+              nextIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
+              nextIconElement.style.transform = "rotate(180deg)";
+            } else if (pageNumber === pageNumbersElement.length - 2) return;
+
+            pageNumbersElement[pageNumber + 1].classList.add(
+              "pagination-item-active"
+            );
+            currentPage.classList.remove("pagination-item-active");
+            break;
+
+          // pages
+          default:
+            var currentPage = document.querySelector(".pagination-item-active");
+            var pageNumber = Number(element.getAttribute("data-target"));
+
+            if (pageNumber === 1) {
+              previousIconContainer.classList.add("disabled-icon");
+              previousIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
+              previousIconElement.style.transform = "rotate(0)";
+
+              nextIconContainer.classList.remove("disabled-icon");
+              nextIconElement.src =
+                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
+              nextIconElement.style.transform = "rotate(0deg)";
+
+              currentPage.classList.remove("pagination-item-active");
+              pageNumbersElement[pageNumber].classList.add(
+                "pagination-item-active"
+              );
+            } else if (pageNumber === pageNumbersElement.length - 2) {
+              previousIconContainer.classList.remove("disabled-icon");
+              previousIconElement.src =
+                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
+              previousIconElement.style.transform = "rotate(180deg)";
+
+              nextIconContainer.classList.add("disabled-icon");
+              nextIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
+              nextIconElement.style.transform = "rotate(180deg)";
+              currentPage.classList.remove("pagination-item-active");
+              pageNumbersElement[pageNumber].classList.add(
+                "pagination-item-active"
+              );
+            } else {
+              // Returning previous icon to primary properties
+              previousIconContainer.classList.remove("disabled-icon");
+              previousIconElement.src =
+                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
+              previousIconElement.style.transform = "rotate(180deg)";
+
+              // Returning next icon to primary properties
+              nextIconContainer.classList.remove("disabled-icon");
+              nextIconElement.src =
+                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
+              nextIconElement.style.transform = "rotate(0deg)";
+
+              currentPage.classList.remove("pagination-item-active");
+              pageNumbersElement[pageNumber].classList.add(
+                "pagination-item-active"
+              );
+            }
+            break;
+        }
+      }
+    </script>
+  </body>
+</html>
