@@ -7,175 +7,209 @@
     <title>Pagination</title>
   </head>
   <body>
-    <div class="pagination-wrapper">
-      <span
-        class="pagination-wrapper__pagination-item disabled-icon"
-        data-target="0"
-        onclick="changePage(this)"
-      >
-        <img
-          class="prev-icon"
-          src="./images/icon-Thin-Next-blue.svg"
-          alt="previous-icon"
-        />
-      </span>
-      <span
-        class="pagination-wrapper__pagination-item pagination-item-active"
-        data-target="1"
-        onclick="changePage(this)"
-        >1</span
-      >
-      <span
-        class="pagination-wrapper__pagination-item"
-        data-target="2"
-        onclick="changePage(this)"
-        >2</span
-      >
-      <span
-        class="pagination-wrapper__pagination-item"
-        data-target="3"
-        onclick="changePage(this)"
-        >3</span
-      >
-      <span
-        class="pagination-wrapper__pagination-item"
-        data-target="4"
-        onclick="changePage(this)"
-        >4</span
-      >
-      <span
-        class="pagination-wrapper__pagination-item"
-        data-target="-1"
-        onclick="changePage(this)"
-      >
-        <img
-          class="next-icon"
-          src="./images/icon-Thin-Next-blue.svg"
-          alt="next-icon"
-        />
-      </span>
-    </div>
+    <div id="pagination"></div>
 
     <script>
-      // HTML elements of pagination-items
-      var pageNumbersElement = document.querySelectorAll(
-        ".pagination-wrapper__pagination-item"
-      );
-      var previousIconContainer = pageNumbersElement[0];
-      var previousIconElement = document.querySelector(".prev-icon");
-      var nextIconContainer = pageNumbersElement[pageNumbersElement.length - 1];
-      var nextIconElement = document.querySelector(".next-icon");
+      /* * * * * * * * * * * * * * * * *
+       * Pagination
+       * javascript page navigation
+       * * * * * * * * * * * * * * * * */
 
-      var allData = 101;
-      var allPages = Math.ceil(allData / 10);
-      var numberOfPages = Array(allPages)
-        .fill()
-        .map((x, i) => i + 1);
-      ;
+      var Pagination = {
+        code: "",
 
-      // Handle change page with click on pagination items and icons
-      function changePage(element) {
-        var selectedPage = Number(element.getAttribute("data-target"));
-        switch (selectedPage) {
-          // Previous icon
-          case 0:
-            var currentPage = document.querySelector(".pagination-item-active");
-            var pageNumber = Number(currentPage.getAttribute("data-target"));
+        // --------------------
+        // Utility
+        // --------------------
 
-            // TODO SINA: CHANGE THE SRC OF ICON AND CHANGE IT TO WHTIE ICON
-            nextIconContainer.classList.remove("disabled-icon");
-            nextIconElement.src =
-              "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
-            nextIconElement.style.transform = "rotate(0deg)";
+        // converting initialize data
+        Extend: function (data) {
+          data = data || {};
+          Pagination.size = data.size || 500;
+          Pagination.page = data.page || 10;
+          Pagination.step = data.step || 10;
+        },
 
-            if (pageNumber === 2) {
-              previousIconContainer.classList.add("disabled-icon");
-              previousIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
-              previousIconElement.style.transform = "rotate(0)";
-            } else if (pageNumber === 1) return;
+        // add pages by number (from [s] to [f])
+        Add: function (s, f) {
+          for (var i = s; i < f; i++) {
+            Pagination.code += "<a>" + i + "</a>";
+          }
+        },
 
-            pageNumbersElement[pageNumber - 1].classList.add(
-              "pagination-item-active"
+        // add last page with separator
+        Last: function () {
+          Pagination.code += "<i>...</i><a>" + Pagination.size + "</a>";
+        },
+
+        // add first page with separator
+        First: function () {
+          Pagination.code += "<a>1</a><i>...</i>";
+        },
+
+        // --------------------
+        // Handlers
+        // --------------------
+
+        // change page
+        Click: function () {
+          var nav = document.getElementsByTagName("a");
+          Pagination.page = +this.innerHTML;
+          Pagination.Start();
+          if (Pagination.page === 1) {
+            nav[0].classList.add("disabled-icon");
+            nav[0].childNodes[0].src = "./images/white-direction.svg";
+            nav[nav.length - 1].classList.remove("disabled-icon", "with-rotate");
+            nav[nav.length - 1].childNodes[0].src =
+              "./images/icon-Thin-Next.svg";
+          } else if (Pagination.page === Pagination.size) {
+            nav[0].classList.remove("disabled-icon");
+            nav[0].childNodes[0].src = "./images/icon-Thin-Next-blue.svg";
+            nav[Pagination.size - 3].classList.add(
+              "disabled-icon",
+              "with-rotate"
             );
-            currentPage.classList.remove("pagination-item-active");
-            break;
+            nav[Pagination.size - 3].childNodes[0].src =
+              "./images/white-direction.svg";
+          } else {
+            nav[0].classList.remove("disabled-icon");
+            nav[0].childNodes[0].src = "./images/icon-Thin-Next-blue.svg";
+            
+            nav[nav.length - 1].classList.remove("disabled-icon", "with-rotate");
+            nav[nav.length - 1].childNodes[0].src =
+              "./images/icon-Thin-Next.svg";
+          }
+        },
 
-          // Next icon
-          case -1:
-            var currentPage = document.querySelector(".pagination-item-active");
-            var pageNumber = Number(currentPage.getAttribute("data-target"));
-            // TODO SINA: CHANGE THE SRC OF ICON AND CHANGE IT TO WHTIE ICON
+        // previous page
+        Prev: function () {
+          var nav = document.getElementsByTagName("a");
+          nav[nav.length - 1].classList.remove("disabled-icon");
+          nav[nav.length - 1].childNodes[0].src =
+            "./images/icon-Thin-Next-blue.svg";
 
-            previousIconContainer.classList.remove("disabled-icon");
-            previousIconElement.src =
-              "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
-            previousIconElement.style.transform = "rotate(180deg)";
+          Pagination.page--;
+          if (Pagination.page < 1) {
+            Pagination.page = 1;
+          }
+          if (Pagination.page === 1) {
+            nav[0].classList.add("disabled-icon");
+            nav[0].childNodes[0].src = "./images/white-direction.svg";
+          }
+          Pagination.Start();
+        },
 
-            if (pageNumber === pageNumbersElement.length - 3) {
-              nextIconContainer.classList.add("disabled-icon");
-              nextIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
-              nextIconElement.style.transform = "rotate(180deg)";
-            } else if (pageNumber === pageNumbersElement.length - 2) return;
-
-            pageNumbersElement[pageNumber + 1].classList.add(
-              "pagination-item-active"
+        // next page
+        Next: function () {
+          var nav = document.getElementsByTagName("a");
+          nav[0].classList.remove("disabled-icon");
+          nav[0].childNodes[0].src = "./images/icon-Thin-Next-blue.svg";
+          Pagination.page++;
+          if (Pagination.page > Pagination.size) {
+            Pagination.page = Pagination.size;
+          }
+          if (Pagination.page === Pagination.size) {
+            nav[Pagination.size - 3].classList.add(
+              "disabled-icon",
+              "with-rotate"
             );
-            currentPage.classList.remove("pagination-item-active");
-            break;
+            nav[Pagination.size - 3].childNodes[0].src =
+              "./images/white-direction.svg";
+              nav[Pagination.size - 3].childNodes[0].src =
+              "./images/white-direction.svg";
+          }
+          Pagination.Start();
+        },
 
-          // pages
-          default:
-            var currentPage = document.querySelector(".pagination-item-active");
-            var pageNumber = Number(element.getAttribute("data-target"));
+        // --------------------
+        // Script
+        // --------------------
 
-            if (pageNumber === 1) {
-              previousIconContainer.classList.add("disabled-icon");
-              previousIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
-              previousIconElement.style.transform = "rotate(0)";
+        // binding pages
+        Bind: function () {
+          var a = Pagination.e.getElementsByTagName("a");
+          for (var i = 0; i < a.length; i++) {
+            if (+a[i].innerHTML === Pagination.page) a[i].className = "current";
+            a[i].addEventListener("click", Pagination.Click, false);
+          }
+        },
 
-              nextIconContainer.classList.remove("disabled-icon");
-              nextIconElement.src =
-                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
-              nextIconElement.style.transform = "rotate(0deg)";
+        // write pagination
+        Finish: function () {
+          Pagination.e.innerHTML = Pagination.code;
+          Pagination.code = "";
+          Pagination.Bind();
+        },
 
-              currentPage.classList.remove("pagination-item-active");
-              pageNumbersElement[pageNumber].classList.add(
-                "pagination-item-active"
-              );
-            } else if (pageNumber === pageNumbersElement.length - 2) {
-              previousIconContainer.classList.remove("disabled-icon");
-              previousIconElement.src =
-                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
-              previousIconElement.style.transform = "rotate(180deg)";
+        // find pagination type
+        Start: function () {
+          if (Pagination.size < Pagination.step * 2 + 6) {
+            Pagination.Add(1, Pagination.size + 1);
+          } else if (Pagination.page < Pagination.step * 2 + 1) {
+            Pagination.Add(1, Pagination.step * 2 + 4);
+            Pagination.Last();
+          } else if (Pagination.page > Pagination.size - Pagination.step * 2) {
+            Pagination.First();
+            Pagination.Add(
+              Pagination.size - Pagination.step * 2 - 2,
+              Pagination.size + 1
+            );
+          } else {
+            Pagination.First();
+            Pagination.Add(
+              Pagination.page - Pagination.step,
+              Pagination.page + Pagination.step + 1
+            );
+            Pagination.Last();
+          }
+          Pagination.Finish();
+        },
 
-              nextIconContainer.classList.add("disabled-icon");
-              nextIconElement.src = `file:///C:/Users/m.alghosi/Desktop/pagination/images/white-direction.svg`;
-              nextIconElement.style.transform = "rotate(180deg)";
-              currentPage.classList.remove("pagination-item-active");
-              pageNumbersElement[pageNumber].classList.add(
-                "pagination-item-active"
-              );
-            } else {
-              // Returning previous icon to primary properties
-              previousIconContainer.classList.remove("disabled-icon");
-              previousIconElement.src =
-                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
-              previousIconElement.style.transform = "rotate(180deg)";
+        // --------------------
+        // Initialization
+        // --------------------
 
-              // Returning next icon to primary properties
-              nextIconContainer.classList.remove("disabled-icon");
-              nextIconElement.src =
-                "file:///C:/Users/m.alghosi/Desktop/pagination/images/icon-Thin-Next-blue.svg";
-              nextIconElement.style.transform = "rotate(0deg)";
+        // binding buttons
+        Buttons: function (e) {
+          var nav = e.getElementsByTagName("a");
+          nav[0].addEventListener("click", Pagination.Prev, false);
+          nav[1].addEventListener("click", Pagination.Next, false);
+        },
 
-              currentPage.classList.remove("pagination-item-active");
-              pageNumbersElement[pageNumber].classList.add(
-                "pagination-item-active"
-              );
-            }
-            break;
-        }
-      }
+        // create skeleton
+        Create: function (e) {
+          var html = [
+            "<a class='disabled-icon'><img src='./images/white-direction.svg'></a>", // previous button   // * TODO: EDIT PREV ICON
+            "<span class='numbers'></span>", // pagination container
+            "<a><img src='./images/icon-Thin-Next-to-right.svg'></a>", // next button // * TODO: EDIT NEXT ICON
+          ];
+
+          e.innerHTML = html.join("");
+          Pagination.e = e.getElementsByTagName("span")[0];
+          Pagination.Buttons(e);
+        },
+
+        // init
+        Init: function (e, data) {
+          Pagination.Extend(data);
+          Pagination.Create(e);
+          Pagination.Start();
+        },
+      };
+
+      /* * * * * * * * * * * * * * * * *
+       * Initialization
+       * * * * * * * * * * * * * * * * */
+
+      var init = function () {
+        Pagination.Init(document.getElementById("pagination"), {
+          size: 10, // pages size
+          page: 1, // selected page
+          step: 1, // pages before and after current
+        });
+      };
+
+      document.addEventListener("DOMContentLoaded", init, false);
     </script>
   </body>
 </html>

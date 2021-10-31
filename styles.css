@@ -1,47 +1,81 @@
 :root {
   --blue: #007BFF;
   --white: #FFFFFF;
-  --gray: #E5E5E5;
+  --gray: #F8F8FA;
   --dark-gray: #A4AEB3;
 }
 
-html, body {
+/* ========================================= NEW CSS CODES ========================================= */
+
+/* SHOULD BE DELETED HTML AND BODY STYLES ******************** */
+html {
+  height: 100%;
+  width: 100%;
   background-color: var(--gray);
 }
-.pagination-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  font-family: Arial, sans-serif;
 }
 
-.pagination-last-item {
-  display: none;
+
+
+
+
+
+#pagination {
+  margin-top: 64px;
+  display: flex;
+  justify-content: flex-start;
 }
-.pagination-wrapper__pagination-item {
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
-  background-color: var(--white);
-  border-radius: 15px;
+
+#pagination a, #pagination i {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  width: 32px !important;
+  margin-right: 4px;
+  height: 32px;
+  border-radius: 10px;
+  -webkit-user-select:none;
+     -moz-user-select:none;
+      -ms-user-select:none;
+       -o-user-select:none;
+          user-select:none;
+}
+
+#pagination a {
   border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
+  background-color: var(--white);
 }
-.prev-icon {
-  transform: rotate(180deg);
+#pagination a.disabled-icon {
+  background-color: var(--dark-gray);
 }
-
+.numbers {
+  display: flex;
+}
+#pagination a.current {
+  background-color: var(--blue);
+  color: white;
+}
 .disabled-icon {
   cursor: not-allowed;
   background-color: var(--dark-gray);
 }
-.pagination-wrapper__pagination-item {
-  margin-right: 4px;
+.with-rotate {
+  transform: rotate(180deg);
 }
 
-.pagination-item-active {
-  background-color: var(--blue);
-  color: white;
+@media (min-width: 768px) {
+  #pagination a, #pagination i {
+    font-size: 16px;
+    width: 40px !important;
+    height: 40px;
+    border-radius: 15px;
+  }
 }
